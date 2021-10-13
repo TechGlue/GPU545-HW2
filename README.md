@@ -11,6 +11,7 @@
 # Tools going to be utilized.
 
 - For our editor to keep consistency we are going to all utilize Visual Studio Code. Here's a link if needed, make sure to utilize it. If you're really against Vscode when pushing files do not upload IDE specific files. <https://code.visualstudio.com/>
-- For all new code merges utilize GIT.
+- For all new code merges utilize Git Kraken.
+<https://www.gitkraken.com/>
   
  That's all there is to it. Let's communicate often and don't hesitate to drop any issues in the Discord. **It's better that we resolve issues earlier rather than later. Let's make this a great Team Project!**
