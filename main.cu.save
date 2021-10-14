@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
             ch = ch + 32;
         switch( ch )
         {
-            case 'c':  
+            case 'c':
                 if(argc != 7){
                     usage();
                     break;
@@ -66,12 +66,12 @@ int main(int argc, char *argv[]){
                 pixels = pgmRead(header, &numRows, &numCols, fp);
 
                 pgmDrawCircle(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
-                pgmWrite(header,pixels, numRows, numCols, out );    
+                pgmWrite(header,pixels, numRows, numCols, out );
 
 		//put GPU code
 
                 break;
-            case 'e':  
+            case 'e':
                 if(argc != 5){
                     usage();
                     break;
