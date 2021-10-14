@@ -26,6 +26,13 @@ int pgmDrawLine( int *pixels, int numRows, int numCols, char **header, int p1row
     return 0;
 }
 
-int pgmWrite( const char **header, const int *pixels, int numRows, int numCols, FILE *out ){
+int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *out ){
     return 0;
 }
+
+void usage()
+{
+        printf("Usage:\n    -e edgeWidth  oldImageFile  newImageFile\n    -c circleCenterRow circleCenterCol radius  oldImageFile  newImageFile\n    -l  p1row  p1col  p2row  p2col  oldImageFile  newImageFile\n");
+
+}
+

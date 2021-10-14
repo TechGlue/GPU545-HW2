@@ -115,7 +115,11 @@ int pgmDrawLine( int *pixels, int numRows, int numCols, char **header, int p1row
  *  @return     return 0 if the function successfully writes the header and pixels into file.
  *                          else return -1;
  */
-int pgmWrite( const char **header, const int *pixels, int numRows, int numCols, FILE *out );
+int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *out );
 
+
+//method used by main to print the usage of our application 
+//when our argument parameters aren't satisfactory
+void usage();
 
 #endif
