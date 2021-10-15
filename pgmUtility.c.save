@@ -41,9 +41,9 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
         }
 	i = 0;
 	//for the rest of the file store elements into pixel array
-	/*while() {
-
-	}*/
+	while(in != EOF) {
+	printf("%d\n",getw(in));
+	}
 
     return 0;
 }
