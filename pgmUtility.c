@@ -28,7 +28,7 @@
 int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
 	int * pixels = (int *) malloc(sizeof(int) * (512*512));
 	//iterate through file to get the header
-	      char buff[50];
+	char buff[50];
         //iterate through the file copying line by line to the buffer
 	int i = 0;
 	//copy first 4 lines for header and store into header array
