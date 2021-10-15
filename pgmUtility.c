@@ -127,3 +127,74 @@ void usage()
 
 }
 
+ArgOption parseOpt(int argc, char *argv[])
+{
+    if(argc != 5 && argc != 7 && argc != 8)
+    {
+        return OPT_NULL;
+    } 
+    else
+    {
+        if(strlen( argv[1] ) != 2)
+            return OPT_NULL;
+    }
+
+    int ch = (int)argv[1][1];
+
+    if(ch < 97)
+        ch = ch + 32;
+
+    if (ch == 'c'){
+        if(argc != 7)
+            return OPT_NULL;
+        return OPT_CIRCLE;
+    }
+      
+    if (ch == 'l'){
+        if(argc != 8)
+            return OPT_NULL;
+        return OPT_LINE;
+    }
+
+    if (ch == 'e'){
+        if(argc != 5)
+            return OPT_NULL;
+        return OPT_EDGE;
+    }
+
+    return OPT_NULL;
+}
+
+void parseArgsCircle(char *argv[], int *circleCenterRow, int *circleCenterCol, 
+                    int *radius, char originalImageName[], char newImageFileName[])
+{
+    *circleCenterRow = atoi(argv[2]);
+    *circleCenterCol = atoi(argv[3]);
+    *radius = atoi(argv[4]);
+    strcpy(originalImageName, argv[5]);
+    strcpy(newImageFileName, argv[6]);
+    printf("%d - %d - %d - %s - %s\n", *circleCenterRow, *circleCenterCol, 
+            *radius, originalImageName, newImageFileName);
+}
+
+void parseArgsLine(char *argv[], int *p1y, int *p1x, int *p2y, int *p2x, char originalImageName[], char newImageFileName[])
+{
+    *p1y = atoi(argv[2]);
+    *p1x = atoi(argv[3]);
+
+    *p2y = atoi(argv[4]);
+    *p2x = atoi(argv[5]);
+
+
+    strcpy(originalImageName, argv[6]);
+    strcpy(newImageFileName, argv[7]);
+	printf("%d - %d - %d - %d - %s - %s\n", *p1y, *p1x, *p2y, *p2x, originalImageName, newImageFileName);
+}
+
+void parseArgsEdge(char *argv[], int *edgeWidth, char originalImageName[], char newImageFileName[])
+{
+    *edgeWidth = atoi(argv[2]);
+    strcpy(originalImageName, argv[3]);
+    strcpy(newImageFileName, argv[4]);
+	printf("%d - %s - %s\n", *edgeWidth, originalImageName, newImageFileName);
+}

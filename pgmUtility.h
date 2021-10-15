@@ -13,7 +13,12 @@
 #define rowsInHeader 4      // number of rows in image header
 #define maxSizeHeadRow 200  // maximal number characters in one row in the header
 
-
+enum ArgOption {
+    OPT_EDGE,
+    OPT_CIRCLE,
+    OPT_LINE,
+    OPT_NULL
+};
 
 /**
  *  Function Name: 
@@ -117,6 +122,38 @@ int pgmDrawLine( int *pixels, int numRows, int numCols, char **header, int p1row
  */
 int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *out );
 
+/**
+*   Function Name:
+*       parseOpt()
+*   
+*   Parse the command line arguments to determine which mode the program is being used in.
+*/
+ArgOption parseOpt(int argc, char *argv[]);
+
+/**
+*   Function Name:
+*       parseArgsCircle()
+*   
+*   Parse the values in argv[] appropriate for OPT_CIRCLE and copy them into the variable references passed to the function.
+*/
+void parseArgsCircle(char *argv[], int *circleCenterRow, int *circleCenterCol, 
+                    int *radius, char originalImageName[], char newImageFileName[]);
+
+/**
+*   Function Name:
+*       parseArgsEdge()
+*   
+*   Parse the values in argv[] appropriate for OPT_EDGE and copy them into the variable references passed to the function.
+*/
+void parseArgsEdge(char *argv[], int *edgeWidth, char originalImageName[], char newImageFileName[]);
+
+/**
+*   Function Name:
+*       parseArgsLine()
+*   
+*   Parse the values in argv[] appropriate for OPT_LINE and copy them into the variable references passed to the function.
+*/
+void parseArgsLine(char *argv[], int *p1y, int *p1x, int *p2y, int *p2x, char originalImageName[], char newImageFileName[]);
 
 //method used by main to print the usage of our application 
 //when our argument parameters aren't satisfactory

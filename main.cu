@@ -4,6 +4,7 @@
 
 int main(int argc, char *argv[]){
 
+    ArgOption opt;
 	FILE *fp = NULL, *out = NULL;
 	char ** header = (char**) malloc( sizeof(char *) * rowsInHeader);
 
@@ -22,118 +23,42 @@ int main(int argc, char *argv[]){
     int m, n, l, x, ch;
     int edgeWidth, circleCenterRow, circleCenterCol, radius;
     char originalImageName[100], newImageFileName[100];
-    if(argc != 5 && argc != 7 && argc != 8)
-    {
-                usage();
-        return 1;
-        }
-    else
-    {
-        l = strlen( argv[1] );
-        if(l != 2){
-            usage();
-            return 1;
-        }
-        ch = (int)argv[1][1];
-        if(ch < 97)
-            ch = ch + 32;
-        switch( ch )
-        {
-            case 'c':  
-                if(argc != 7){
-                    usage();
-                    break;
-                }
-                circleCenterRow = atoi(argv[2]);
-                circleCenterCol = atoi(argv[3]);
-                radius = atoi(argv[4]);
-                strcpy(originalImageName, argv[5]);
-                strcpy(newImageFileName, argv[6]);
-		printf("%d - %d - %d - %s - %s\n",atoi(argv[2]),atoi(argv[3]),atoi(argv[4]),originalImageName,newImageFileName);
-                fp = fopen(originalImageName, "r");
-                if(fp == NULL){
-                    usage();
-                    return 1;
-                }
-                out = fopen(newImageFileName, "w");
-                if(out == NULL){
-                    usage();
-                    fclose(fp);
-                    return 1;
-                }
+
+    opt = parseOpt(argc, argv);
+    if (opt == OPT_CIRCLE)
+        parseArgsCircle(argv, &circleCenterRow, &circleCenterCol, &radius, originalImageName, newImageFileName);
+
+    if (opt == OPT_EDGE)
+        parseArgsEdge(argv, &edgeWidth, originalImageName, newImageFileName);
+
+    if (opt == OPT_LINE)
+        parseArgsLine(argv, &p1y, &p1x, &p2y, &p2x, originalImageName, newImageFileName);
 
 
-                pixels = pgmRead(header, &numRows, &numCols, fp);
-
-                pgmDrawCircle(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
-                pgmWrite(header,pixels, numRows, numCols, out );    
-
-		//put GPU code
-
-                break;
-            case 'e':  
-                if(argc != 5){
-                    usage();
-                    break;
-		}
-
-                edgeWidth = atoi(argv[2]);
-                strcpy(originalImageName, argv[3]);
-                strcpy(newImageFileName, argv[4]);
-		printf("%d - %s - %s\n",atoi(argv[2]),originalImageName,newImageFileName);
-                fp = fopen(originalImageName, "r");
-                if(fp == NULL){
-                    usage();
-                    return 1;
-                }
-                out = fopen(newImageFileName, "w");
-                if(out == NULL){
-                    usage();
-                    fclose(fp);
-                    return 1;
-                }
-
-                pixels = pgmRead(header, &numRows, &numCols, fp);
-                pgmDrawEdge(pixels, numRows, numCols, edgeWidth, header);
-                pgmWrite(header, pixels, numRows, numCols, out );
-               //put GPU code
-
-		 break;
-
-            case 'l':  
-                if(argc != 8){
-                    usage();
-                    break;
-                }
-                p1y = atoi(argv[2]);
-                p1x = atoi(argv[3]);
-
-                p2y = atoi(argv[4]);
-                p2x = atoi(argv[5]);
-
-
-                strcpy(originalImageName, argv[6]);
-                strcpy(newImageFileName, argv[7]);
-		printf("%d - %d - %d - %d - %s - %s\n",atoi(argv[2]),atoi(argv[3]),atoi(argv[4]),atoi(argv[5]),originalImageName,newImageFileName);
-                fp = fopen(originalImageName, "r");
-                if(fp == NULL){
-                    usage();
-                    return 1;
-                }
-                out = fopen(newImageFileName, "w");
-                if(out == NULL){
-                    usage();
-                    fclose(fp);
-                    return 1;
-                }
-
-                pixels = pgmRead(header, &numRows, &numCols, fp);
-                pgmDrawLine(pixels, numRows, numCols, header, p1y, p1x, p2y, p2x);
-                pgmWrite(header, pixels, numRows, numCols, out );
-                //put GPU Code
-		break;
-        }
+    if (opt != OPT_NULL){
+        fp = fopen(originalImageName, "r");
+        out = fopen(newImageFileName, "w");
     }
+
+    if(fp == NULL || out == NULL || opt == OPT_NULL){
+        usage();
+        return 1;
+    }
+
+    pixels = pgmRead(header, &numRows, &numCols, fp);
+
+    if (opt == OPT_CIRCLE)
+        pgmDrawCircle(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
+                    pgmWrite(header,pixels, numRows, numCols, out );    
+    if (opt == OPT_EDGE)
+        pgmDrawEdge(pixels, numRows, numCols, edgeWidth, header);
+    
+    if (opt == OPT_LINE)
+        pgmDrawLine(pixels, numRows, numCols, header, p1y, p1x, p2y, p2x);
+                
+                
+    pgmWrite(header, pixels, numRows, numCols, out );
+
 
     i = 0;
 //freeing the numbers was behaving weird so commented out just to compile
