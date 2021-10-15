@@ -26,7 +26,7 @@
  *
  */
 int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
-	int * pixels = (int *) malloc(sizeof(int) * (512*512));
+	//int * pixels = (int *) malloc(sizeof(int) * (512*512));
 	//iterate through file to get the header
 	char buff[50];
         //iterate through the file copying line by line to the buffer
@@ -34,18 +34,24 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
 	//copy first 4 lines for header and store into header array
         while(i < 4) {
 		fgets(buff, sizeof(buff), in);
-                *header = (char *) malloc(sizeof(char) * sizeof(buff));
-		memcpy(*header, buff, sizeof(buff));
-		printf("%s", *header);
+                //header = (char *) malloc(sizeof(char) * sizeof(buff));
+		memcpy(header[i], buff, sizeof(buff));
+		//printf("%s", *header);
+		//printf("%s",buff);
 		i++;
         }
-	i = 0;
+	//Get numRows and numCols
+	char * numRowColData = header[2];
+	sscanf(numRowColData,"%d",numRows); //Since the row and cols are spaced out, sscanf will check for the first number.
+	sscanf(numRowColData,"%d",numCols); //Finds the next.
+
+	//initialize the pixels
+	int * pixels = (int * ) malloc(sizeof(int) * (*numRows * *numCols));
 	//for the rest of the file store elements into pixel array
-	/*while() {
-
-	}*/
-
-    return 0;
+	for(i = 0; i < *numRows * *numCols; i++){
+		fscanf(in,"%d",&pixels[i]); //fscanf will stop after reading an iteger.
+	}
+    return pixels;
 }
 
 

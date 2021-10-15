@@ -59,13 +59,12 @@ int main(int argc, char *argv[]){
                 
     pgmWrite(header, pixels, numRows, numCols, out );
 
-
     i = 0;
 //freeing the numbers was behaving weird so commented out just to compile
-/*    for(;i < numRows; i++)
-        free(pixels[i]);
-    free(pixels);
-  */  i = 0;
+  //for(;i < 512 * 512; i++)
+	//free(pixels[i]);
+  free(pixels);
+  i = 0;
     for(;i < rowsInHeader; i++)
         free(header[i]);
     free(header);
