@@ -159,4 +159,6 @@ void parseArgsLine(char *argv[], int *p1y, int *p1x, int *p2y, int *p2x, char or
 //when our argument parameters aren't satisfactory
 void usage();
 
+//Misc used by luis for review and building.
+void temp2DHeaderReader(char ** header);
 #endif

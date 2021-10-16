@@ -22,7 +22,7 @@
  *  @param[in,out]  numRows describes how many rows of pixels in the image.
  *  @param[in,out]  numCols describe how many pixels in one row in the image.
  *  @param[in]      in      FILE pointer, points to an opened image file that we like to read in.
- *  @return         If successful, return all pixels in the pgm image, which is an int *, equivalent> *                  a 1D array that stores a 2D image in a linearized fashion. Otherwise null.
+ *  @return         If successful, return all pixels in the pgm image, which is an int *, equivalent> * a 1D array that stores a 2D image in a linearized fashion. Otherwise null.
  *
  */
 int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
@@ -54,6 +54,15 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
     return pixels;
 }
 
+
+//not sure about my logic buit it's not grabbing the length. 
+void temp2DHeaderReader(char ** header)
+{
+    for(int i = 0; i < 4; i++)
+    {
+        printf("Position %d has a value of %s in the header: \n", i, header[i]);
+    }
+}
 
 /**
  *  Function Name:
