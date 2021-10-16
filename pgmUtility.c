@@ -45,7 +45,7 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
 	sscanf(numRowColData,"%d",numRows); //Since the row and cols are spaced out, sscanf will check for the first number.
 	sscanf(numRowColData,"%d",numCols); //Finds the next.
 
-	//initialize the pixels
+	//initialize the pixels to be represented in a 1D ARRAY 
 	int * pixels = (int * ) malloc(sizeof(int) * (*numRows * *numCols));
 	//for the rest of the file store elements into pixel array
 	for(i = 0; i < *numRows * *numCols; i++){
@@ -54,15 +54,6 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
     return pixels;
 }
 
-
-//not sure about my logic buit it's not grabbing the length. 
-void temp2DHeaderReader(char ** header)
-{
-    for(int i = 0; i < 4; i++)
-    {
-        printf("Position %d has a value of %s in the header: \n", i, header[i]);
-    }
-}
 
 /**
  *  Function Name:
@@ -149,6 +140,70 @@ int pgmDrawLine( int *pixels, int numRows, int numCols, char **header, int p1row
  *                          else return -1;
  */
 int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *out ){
+
+    //check to see if our two data set's are valid
+    if(pixels == NULL)
+    {
+        perror("The passed in pixels is empty. Can't write out exiting program...");
+        exit(EXIT_FAILURE);
+    }
+    if(header == NULL)
+    {
+        perror("The header is empty. Can't read in dimensions exiting program...");
+        exit(EXIT_FAILURE);
+    }
+
+    //defining variables for logic
+    int rowItterator;
+    int columnItterator;
+    int hi;
+    int lo;
+    int i, j; 
+
+    //opening file out and preparing for write. Wb input means we are creating a file for writing. 
+    out = fopen("outputWritten", "wb");
+
+    //writing pgm file type
+    fprintf(out, "P5");
+    //writing out dimensions
+    fprintf(out, "%d %d",numRows, numCols);
+    //writing out max gray located in row 3 of the header and turning it into a integer
+    fprintf(out, "%d", header[3]);
+    //scanf takes in the array, our desired type and returns an integer
+    int greyscale;
+    sscanf(header[3],"%d",&greyscale);
+
+    //writing out pixels now
+    //checking if our max grayness goes beyond the cap
+    if(greyscale > 255){
+        for(i = 0; i < numRows; i++)
+        {
+            for(j = 0; j < numCols; j++)
+            {
+                hi = HI(pixels[(i*numCols)+j]);
+                lo = LO(pixels[(i*numCols)+j]);
+
+                //fputc converts current pixel to a char and moves the output stream up a position.
+                fputc(hi, out);
+                fputc(lo, out);
+            }
+        }
+    }
+    //else we use the base grayness 
+    else{
+        for(i = 0; i < numRows; i++)
+        {
+            for(j = 0; j< numCols; j++)
+            {
+                lo = LO(pixels[(i*numCols)+j]);
+                fputc(lo, out);
+            }
+        }
+    }
+
+    //closing output file
+    fclose(out);
+
     return 0;
 }
 
@@ -228,4 +283,27 @@ void parseArgsEdge(char *argv[], int *edgeWidth, char originalImageName[], char 
     strcpy(originalImageName, argv[3]);
     strcpy(newImageFileName, argv[4]);
 	printf("%d - %s - %s\n", *edgeWidth, originalImageName, newImageFileName);
+}
+
+
+//**MISCCCCC SECTION*** //not sure about my logic buit it's not grabbing the length. 
+void temp2DHeaderReader(char ** header)
+{
+    for(int i = 0; i < 4; i++)
+    {
+        printf("Position %d has a value of %s in the header: \n", i, header[i]);
+    }
+}
+
+//helper method used for wiping array contents.
+void deallocateArray(int *array, int numCols, int numRows)
+{
+    for(int i = 0; i<numCols*numRows; i++)
+    {
+        
+        //CHECK THESE CHANGES AND REDO THEM SO THE ERROR NOT SHOWING.  
+        //free first each position in the array.
+        //free(typeof(int) array[i]);
+    }
+    free(array);
 }

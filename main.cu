@@ -72,8 +72,8 @@ int main(int argc, char *argv[]){
 //freeing the numbers was behaving weird so commented out just to compile
   //for(;i < 512 * 512; i++)
 	//free(pixels[i]);
-  free(pixels);
-  i = 0;
+    //deallocateArray(pixels, numCols, numRows);
+    i = 0;
     for(;i < rowsInHeader; i++)
         free(header[i]);
     free(header);

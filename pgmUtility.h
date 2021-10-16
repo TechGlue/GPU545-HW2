@@ -5,6 +5,7 @@
 //  Copyright (c) 2013 Tony Tian. All rights reserved.
 //
 
+
 #ifndef cscd439pgm_pgmUtility_h
 #define cscd439pgm_pgmUtility_h
 
@@ -12,6 +13,10 @@
 
 #define rowsInHeader 4      // number of rows in image header
 #define maxSizeHeadRow 200  // maximal number characters in one row in the header
+
+//following macro's used for comapring the shadow intensity
+#define HI(num)	(((num) & 0x0000FF00) << 8)
+#define LO(num)	((num) & 0x000000FF)
 
 enum ArgOption {
     OPT_EDGE,
@@ -36,7 +41,6 @@ enum ArgOption {
  *
  */
 int * pgmRead( char **header, int *numRows, int *numCols, FILE *in  );
-
 
 /**
  *  Function Name:
@@ -161,4 +165,7 @@ void usage();
 
 //Misc used by luis for review and building.
 void temp2DHeaderReader(char ** header);
+
+void deallocateArray(int *array, int numCols, int numRows);
+
 #endif
