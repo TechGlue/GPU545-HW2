@@ -5,6 +5,7 @@
 //  Copyright (c) 2013 Tony Tian. All rights reserved.
 //
 
+
 #ifndef cscd439pgm_pgmUtility_h
 #define cscd439pgm_pgmUtility_h
 
@@ -36,7 +37,6 @@ enum ArgOption {
  *
  */
 int * pgmRead( char **header, int *numRows, int *numCols, FILE *in  );
-
 
 /**
  *  Function Name:
@@ -159,4 +159,6 @@ void parseArgsLine(char *argv[], int *p1y, int *p1x, int *p2y, int *p2x, char or
 //when our argument parameters aren't satisfactory
 void usage();
 
+//Misc used by luis for review and building. Leave here till turn in thanks!
+void temp2DHeaderReader(char ** header);
 #endif

@@ -22,7 +22,7 @@
  *  @param[in,out]  numRows describes how many rows of pixels in the image.
  *  @param[in,out]  numCols describe how many pixels in one row in the image.
  *  @param[in]      in      FILE pointer, points to an opened image file that we like to read in.
- *  @return         If successful, return all pixels in the pgm image, which is an int *, equivalent> *                  a 1D array that stores a 2D image in a linearized fashion. Otherwise null.
+ *  @return         If successful, return all pixels in the pgm image, which is an int *, equivalent> * a 1D array that stores a 2D image in a linearized fashion. Otherwise null.
  *
  */
 int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
@@ -45,7 +45,7 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
 	sscanf(numRowColData,"%d",numRows); //Since the row and cols are spaced out, sscanf will check for the first number.
 	sscanf(numRowColData,"%d",numCols); //Finds the next.
 
-	//initialize the pixels
+	//initialize the pixels to be represented in a 1D ARRAY 
 	int * pixels = (int * ) malloc(sizeof(int) * (*numRows * *numCols));
 	//for the rest of the file store elements into pixel array
 	for(i = 0; i < *numRows * *numCols; i++){
@@ -140,6 +140,53 @@ int pgmDrawLine( int *pixels, int numRows, int numCols, char **header, int p1row
  *                          else return -1;
  */
 int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *out ){
+
+    //check to see if our two data set's are valid
+    if(pixels == NULL)
+    {
+        perror("The passed in pixels is empty. Can't write out exiting program...");
+        exit(EXIT_FAILURE);
+    }
+    if(header == NULL)
+    {
+        perror("The header is empty. Can't read in dimensions exiting program...");
+        exit(EXIT_FAILURE);
+    }
+
+    //defining variables for logic. variable numPosition used for storing current value in 2dArray[i][j]
+    //i and j are just itterators
+    int numPosition;
+    int i, j; 
+
+    //TODO:**relook at the name of the output file** "output.ascii.pgm" is not CORRECT
+    //opening file out and preparing for write. Wb input means we are creating a file for writing. 
+    out = fopen("output.ascii.pgm", "wb");
+
+    //writing pgm file type
+    fprintf(out, header[0]);
+
+    //writing out comment for the image name
+    fprintf(out, "%s", header[1]); 
+
+    //writing out dimensions
+    fprintf(out, "%s",header[2]);
+
+    //writing out max gray located in row 3 of the header and turning it into a integer
+    fprintf(out, "%s", header[3]);
+    
+    for(i = 0; i < numRows; i++)
+    {
+        for(j = 0; j<numCols; j++)
+        {
+            //formula for accessing a 2d space in a 1d array (i*numCols)+j
+            numPosition = pixels[(i*numCols)+j];
+            fprintf(out, "%d ",numPosition);
+        }
+        fprintf(out, "\n");
+    }
+
+    //closing output file
+    fclose(out);
     return 0;
 }
 
@@ -219,4 +266,13 @@ void parseArgsEdge(char *argv[], int *edgeWidth, char originalImageName[], char 
     strcpy(originalImageName, argv[3]);
     strcpy(newImageFileName, argv[4]);
 	printf("%d - %s - %s\n", *edgeWidth, originalImageName, newImageFileName);
+}
+
+//***MISC. SECTION*** 
+void temp2DHeaderReader(char ** header)
+{
+    for(int i = 0; i < 4; i++)
+    {
+        printf("Position %d has a value of %s in the header: \n", i, header[i]);
+    }
 }
