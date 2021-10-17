@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "pgmProcess.h"
 #include "pgmUtility.h"
+//wrote some notes to help me understand - lg
 
 int main(int argc, char *argv[]){
 
@@ -25,6 +26,8 @@ int main(int argc, char *argv[]){
     char originalImageName[100], newImageFileName[100];
 
     opt = parseOpt(argc, argv);
+
+    //block of if's for parsing the input for each specific shape type. Once parsed the content of the variables will be changed 
     if (opt == OPT_CIRCLE)
         parseArgsCircle(argv, &circleCenterRow, &circleCenterCol, &radius, originalImageName, newImageFileName);
 
@@ -33,7 +36,6 @@ int main(int argc, char *argv[]){
 
     if (opt == OPT_LINE)
         parseArgsLine(argv, &p1y, &p1x, &p2y, &p2x, originalImageName, newImageFileName);
-
 
     if (opt != OPT_NULL){
         fp = fopen(originalImageName, "r");
@@ -45,8 +47,11 @@ int main(int argc, char *argv[]){
         return 1;
     }
 
+    //NOTE THE 1D ARRAY LOOKING GOOD IT HAS THE
+    //Reading in the actual pgm file. 
     pixels = pgmRead(header, &numRows, &numCols, fp);
-
+    
+    //The actuall logic methods that will help create the different shapes on the images.  
     if (opt == OPT_CIRCLE)
         pgmDrawCircle(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
                     pgmWrite(header,pixels, numRows, numCols, out );    
@@ -56,16 +61,16 @@ int main(int argc, char *argv[]){
     if (opt == OPT_LINE)
         pgmDrawLine(pixels, numRows, numCols, header, p1y, p1x, p2y, p2x);
                 
-                
+
+    //once we've done our echanges we are going to pass our one d array and print it out as a 2D-array 
     pgmWrite(header, pixels, numRows, numCols, out );
 
-
     i = 0;
-//freeing the numbers was behaving weird so commented out just to compile
-/*    for(;i < numRows; i++)
-        free(pixels[i]);
-    free(pixels);
-  */  i = 0;
+    //freeing the numbers was behaving weird so commented out just to compile
+    //for(;i < 512 * 512; i++)
+	//free(pixels[i]);
+    //deallocateArray(pixels, numCols, numRows);
+    i = 0;
     for(;i < rowsInHeader; i++)
         free(header[i]);
     free(header);
