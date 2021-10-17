@@ -161,45 +161,49 @@ int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *
     int i, j; 
 
     //opening file out and preparing for write. Wb input means we are creating a file for writing. 
-    out = fopen("outputWritten", "wb");
+    out = fopen("output.ascii.pgm", "wb");
 
     //writing pgm file type
-    fprintf(out, "P5");
+    fprintf(out, "P2\n");
     //writing out dimensions
-    fprintf(out, "%d %d",numRows, numCols);
+    fprintf(out, "%s", header[1]); 
+    fprintf(out, "%s",header[2]);
+    //printing out comment
     //writing out max gray located in row 3 of the header and turning it into a integer
-    fprintf(out, "%d", header[3]);
+    fprintf(out, "%s", header[3]);
     //scanf takes in the array, our desired type and returns an integer
-    int greyscale;
-    sscanf(header[3],"%d",&greyscale);
+    // int greyscale;
+    // sscanf(header[3],"%d",&greyscale);
 
-    //writing out pixels now
-    //checking if our max grayness goes beyond the cap
-    if(greyscale > 255){
-        for(i = 0; i < numRows; i++)
-        {
-            for(j = 0; j < numCols; j++)
-            {
-                hi = HI(pixels[(i*numCols)+j]);
-                lo = LO(pixels[(i*numCols)+j]);
+    // //writing out pixels now
+    // //checking if our max grayness goes beyond the cap
+    // if(greyscale > 255){
+    //     for(i = 0; i < numRows; i++)
+    //     {
+    //         for(j = 0; j < numCols; j++)
+    //         {
+    //             hi = HI(pixels[(i*numCols)+j]);
+    //             lo = LO(pixels[(i*numCols)+j]);
 
-                //fputc converts current pixel to a char and moves the output stream up a position.
-                fputc(hi, out);
-                fputc(lo, out);
-            }
-        }
-    }
-    //else we use the base grayness 
-    else{
-        for(i = 0; i < numRows; i++)
+    //             //fputc converts current pixel to a char and moves the output stream up a position.
+    //             fputc(hi, out);
+    //             fputc(lo, out);
+    //         }
+    //     }
+    // }
+    // //else we use the base grayness 
+    // else{
+    for(i = 0; i < numRows; i++)
+    {
+        for(j = 0; j<numCols; j++)
         {
-            for(j = 0; j< numCols; j++)
-            {
-                lo = LO(pixels[(i*numCols)+j]);
-                fputc(lo, out);
-            }
+            lo = LO(pixels[(i*numCols)+j]);
+            // fputc(lo, out);
+            fprintf(out, "%d ",lo);
         }
+        fprintf(out, "\n");
     }
+    //}
 
     //closing output file
     fclose(out);

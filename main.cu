@@ -51,8 +51,6 @@ int main(int argc, char *argv[]){
     //Reading in the actual pgm file. 
     pixels = pgmRead(header, &numRows, &numCols, fp);
     temp2DHeaderReader(header);
-
-
     
     //The actuall logic methods that will help create the different shapes on the images.  
     if (opt == OPT_CIRCLE)
