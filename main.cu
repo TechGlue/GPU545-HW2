@@ -54,7 +54,8 @@ int main(int argc, char *argv[]){
     //The actuall logic methods that will help create the different shapes on the images.  
     if (opt == OPT_CIRCLE)
         pgmDrawCircle(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
-                    pgmWrite(header,pixels, numRows, numCols, out );    
+        //UNCOMMENT THE LINE BELOW AND COMMENT THE LINE ABOVE TO RUN 
+        //pgmDrawCircleCPU(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
     if (opt == OPT_EDGE)
         pgmDrawEdge(pixels, numRows, numCols, edgeWidth, header);
     

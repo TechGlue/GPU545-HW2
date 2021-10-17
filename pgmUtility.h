@@ -86,20 +86,20 @@ int pgmDrawEdge( int *pixels, int numRows, int numCols, int edgeWidth, char **he
  *      pgmDrawLine()
  *      pgmDrawLine() draws a straight line in the image by setting relavant pixels to Zero.
  *                      In this function, you have to invoke a CUDA kernel to perform all image processing on GPU.
- *
- *  @param[in,out]  pixels  holds all pixels in the pgm image, which a 1D integer array. The array
- *                          are modified after the drawing.
- *  @param[in]      numRows describes how many rows of pixels in the image.
- *  @param[in]      numCols describes how many columns of pixels in one row in the image.
- *  @param[in]      p1row specifies the row number of the start point of the line segment.
- *  @param[in]      p1col specifies the column number of the start point of the line segment.
- *  @param[in]      p2row specifies the row number of the end point of the line segment.
- *  @param[in]      p2col specifies the column number of the end point of the line segment.
- *  @param[in,out]  header returns the new header after draw.
- *                  the function might change the maximum intensity value in the image, so we
- *                  have to change the maximum intensity value in the header accordingly.
- *
- *  @return         return 1 if max intensity is changed by the drawing, otherwise return 0;
+*
+*  @param[in,out]  pixels  holds all pixels in the pgm image, which a 1D integer array. The array
+*                          are modified after the drawing.
+*  @param[in]      numRows describes how many rows of pixels in the image.
+*  @param[in]      numCols describes how many columns of pixels in one row in the image.
+*  @param[in]      p1row specifies the row number of the start point of the line segment.
+*  @param[in]      p1col specifies the column number of the start point of the line segment.
+*  @param[in]      p2row specifies the row number of the end point of the line segment.
+*  @param[in]      p2col specifies the column number of the end point of the line segment.
+*  @param[in,out]  header returns the new header after draw.
+*                  the function might change the maximum intensity value in the image, so we
+*                  have to change the maximum intensity value in the header accordingly.
+*
+*  @return         return 1 if max intensity is changed by the drawing, otherwise return 0;
  */
 int pgmDrawLine( int *pixels, int numRows, int numCols, char **header, int p1row, int p1col, int p2row, int p2col );
 
@@ -119,7 +119,7 @@ int pgmDrawLine( int *pixels, int numRows, int numCols, char **header, int p1row
  *  @param[in]  out     FILE pointer, points to an opened text file that we like to write into.
  *  @return     return 0 if the function successfully writes the header and pixels into file.
  *                          else return -1;
- */
+ **/
 int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *out );
 
 /**
@@ -158,6 +158,9 @@ void parseArgsLine(char *argv[], int *p1y, int *p1x, int *p2y, int *p2x, char or
 //method used by main to print the usage of our application 
 //when our argument parameters aren't satisfactory
 void usage();
+
+//CPU sequential code headers
+int pgmDrawCircleCPU( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header );
 
 //Misc used by luis for review and building. Leave here till turn in thanks!
 void temp2DHeaderReader(char ** header);

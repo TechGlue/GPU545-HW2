@@ -54,8 +54,6 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
     return pixels;
 }
 
-//question: how does the max intensity even get changes during the drawing??
-//THIS IS SEQUENTIAL CODE ONCE SOLVED MOVE SOMEWHERE ELSE THIS IS THE GPU POS
 /**
  *  Function Name:
  *      pgmDrawCircle()
@@ -76,10 +74,27 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
  */
 int pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header )
 {
-    //logic
+    return 0;
+}
+
+//question: how does the max intensity even get changes during the drawing??
+//not required to change the max intensity
+
+//This is a sequential solution move somewhere else if needed. Currently not being called by main.
+int pgmDrawCircleCPU( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header )
+{
+    if(pixels == NULL)
+    {
+        printf("The array is empty. Exiting program...");
+        exit(EXIT_FAILURE);
+    }
+    if(header == NULL)
+    {
+        perror("The header is empty. Can't read in dimensions exiting program...");
+        exit(EXIT_FAILURE);
+    }
+
     //The equation for a circle is  ( x - h )^2 + ( y - k )^2 = r^2
-    //for our implementation as long as our value on the left is less than the radius. 
-    //our current x and y position is part of the circle.
 
     int i, j;
     int setToZero = 0;
@@ -93,12 +108,10 @@ int pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow, int cen
             }
         }
     }
-
     return 0;
 }
 
-/**
- *  Function Name:
+/**  Function Name:
  *      pgmDrawEdge()
  *      pgmDrawEdge() draws a black edge frame around the image by setting relavant pixels to Zero.
  *                    In this function, you have to invoke a CUDA kernel to perform all image proces> *
