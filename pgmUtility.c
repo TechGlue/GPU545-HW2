@@ -153,61 +153,40 @@ int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *
         exit(EXIT_FAILURE);
     }
 
-    //defining variables for logic
-    int rowItterator;
-    int columnItterator;
-    int hi;
-    int lo;
+    //defining variables for logic. variable numPosition used for storing current value in 2dArray[i][j]
+    //i and j are just itterators
+    int numPosition;
     int i, j; 
 
+    //TODO:**relook at the name of the output file** "output.ascii.pgm" is not CORRECT
     //opening file out and preparing for write. Wb input means we are creating a file for writing. 
     out = fopen("output.ascii.pgm", "wb");
 
     //writing pgm file type
-    fprintf(out, "P2\n");
-    //writing out dimensions
+    fprintf(out, header[0]);
+
+    //writing out comment for the image name
     fprintf(out, "%s", header[1]); 
+
+    //writing out dimensions
     fprintf(out, "%s",header[2]);
-    //printing out comment
+
     //writing out max gray located in row 3 of the header and turning it into a integer
     fprintf(out, "%s", header[3]);
-    //scanf takes in the array, our desired type and returns an integer
-    // int greyscale;
-    // sscanf(header[3],"%d",&greyscale);
-
-    // //writing out pixels now
-    // //checking if our max grayness goes beyond the cap
-    // if(greyscale > 255){
-    //     for(i = 0; i < numRows; i++)
-    //     {
-    //         for(j = 0; j < numCols; j++)
-    //         {
-    //             hi = HI(pixels[(i*numCols)+j]);
-    //             lo = LO(pixels[(i*numCols)+j]);
-
-    //             //fputc converts current pixel to a char and moves the output stream up a position.
-    //             fputc(hi, out);
-    //             fputc(lo, out);
-    //         }
-    //     }
-    // }
-    // //else we use the base grayness 
-    // else{
+    
     for(i = 0; i < numRows; i++)
     {
         for(j = 0; j<numCols; j++)
         {
-            lo = LO(pixels[(i*numCols)+j]);
-            // fputc(lo, out);
-            fprintf(out, "%d ",lo);
+            //formula for accessing a 2d space in a 1d array (i*numCols)+j
+            numPosition = pixels[(i*numCols)+j];
+            fprintf(out, "%d ",numPosition);
         }
         fprintf(out, "\n");
     }
-    //}
 
     //closing output file
     fclose(out);
-
     return 0;
 }
 
@@ -289,25 +268,11 @@ void parseArgsEdge(char *argv[], int *edgeWidth, char originalImageName[], char 
 	printf("%d - %s - %s\n", *edgeWidth, originalImageName, newImageFileName);
 }
 
-
-//**MISCCCCC SECTION*** //not sure about my logic buit it's not grabbing the length. 
+//***MISC. SECTION*** 
 void temp2DHeaderReader(char ** header)
 {
     for(int i = 0; i < 4; i++)
     {
         printf("Position %d has a value of %s in the header: \n", i, header[i]);
     }
-}
-
-//helper method used for wiping array contents.
-void deallocateArray(int *array, int numCols, int numRows)
-{
-    for(int i = 0; i<numCols*numRows; i++)
-    {
-        
-        //CHECK THESE CHANGES AND REDO THEM SO THE ERROR NOT SHOWING.  
-        //free first each position in the array.
-        //free(typeof(int) array[i]);
-    }
-    free(array);
 }

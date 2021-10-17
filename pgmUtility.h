@@ -14,10 +14,6 @@
 #define rowsInHeader 4      // number of rows in image header
 #define maxSizeHeadRow 200  // maximal number characters in one row in the header
 
-//following macro's used for comapring the shadow intensity
-#define HI(num)	(((num) & 0x0000FF00) << 8)
-#define LO(num)	((num) & 0x000000FF)
-
 enum ArgOption {
     OPT_EDGE,
     OPT_CIRCLE,
@@ -163,9 +159,6 @@ void parseArgsLine(char *argv[], int *p1y, int *p1x, int *p2y, int *p2x, char or
 //when our argument parameters aren't satisfactory
 void usage();
 
-//Misc used by luis for review and building.
+//Misc used by luis for review and building. Leave here till turn in thanks!
 void temp2DHeaderReader(char ** header);
-
-void deallocateArray(int *array, int numCols, int numRows);
-
 #endif

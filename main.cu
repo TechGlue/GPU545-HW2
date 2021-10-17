@@ -50,7 +50,6 @@ int main(int argc, char *argv[]){
     //NOTE THE 1D ARRAY LOOKING GOOD IT HAS THE
     //Reading in the actual pgm file. 
     pixels = pgmRead(header, &numRows, &numCols, fp);
-    temp2DHeaderReader(header);
     
     //The actuall logic methods that will help create the different shapes on the images.  
     if (opt == OPT_CIRCLE)
@@ -67,8 +66,8 @@ int main(int argc, char *argv[]){
     pgmWrite(header, pixels, numRows, numCols, out );
 
     i = 0;
-//freeing the numbers was behaving weird so commented out just to compile
-  //for(;i < 512 * 512; i++)
+    //freeing the numbers was behaving weird so commented out just to compile
+    //for(;i < 512 * 512; i++)
 	//free(pixels[i]);
     //deallocateArray(pixels, numCols, numRows);
     i = 0;
