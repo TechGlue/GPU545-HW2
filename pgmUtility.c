@@ -54,7 +54,9 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
     return pixels;
 }
 
+//question: how does the max intensity even get changes during the drawing??
 
+//THIS IS SEQUENTIAL CODE ONCE SOLVED MOVE SOMEWHERE ELSE THIS IS THE GPU POS
 /**
  *  Function Name:
  *      pgmDrawCircle()
@@ -73,9 +75,19 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
  *                  have to change maximum intensity value in the header accordingly.
  *  @return         return 1 if max intensity is changed, otherwise return 0;
  */
-int pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header ){
+int pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header )
+{
+    printf("In the draw a circle method");
+    //pixels[(i*numCols)+j];
+    int i, j;
+    int setToZero = 0;
+    int centerCirclePoint = (centerRow*numCols)+centerCol; 
 
-	printf("circlin");
+    // for(i = 0; i<numCols; i++)
+    // {
+
+    // }
+
     return 0;
 }
 
