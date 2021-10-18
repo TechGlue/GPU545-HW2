@@ -96,7 +96,37 @@ int pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow, int cen
  *  @return         return 1 if max intensity is changed by the drawing, otherwise return 0;
  */
 int pgmDrawEdge( int *pixels, int numRows, int numCols, int edgeWidth, char **header ){
-	printf("edgin");
+
+	int j, k, i;
+	//j is the row index, k is the column index
+	for(j = 0; j < numRows; j++) {
+		for(k = 0; k < numCols; k++) {
+		/* for this solution we want to check if the row index 
+		is less than the edgeWidth or greater than the rowSize - edgeWidth
+		if true we change that pixel location to zero because it fits in our edge.
+
+		if not we check to see if the column index is less than edgeWidth or if the column index is 
+		greater than numCols - edgeWidth if true we change the pixel to zero
+		*/
+		if(j < edgeWidth || j >= numRows-edgeWidth)
+			pixels[j*numRows + k] = 0;
+		else if(k < edgeWidth || k >= numCols-edgeWidth)
+			pixels[j*numRows + k] = 0;
+			//print statement to check pixels in arr
+			//printf("%d ", pixels[j*numRows + k]);
+
+
+		}
+		//print statement to create a new line after every row to check pixels easier
+		//printf("\n");
+
+	}
+
+
+
+
+
+
     return 0;
 }
 
