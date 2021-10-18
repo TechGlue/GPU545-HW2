@@ -56,9 +56,10 @@ int main(int argc, char *argv[]){
         pgmDrawCircle(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
         //UNCOMMENT THE LINE BELOW AND COMMENT THE LINE ABOVE TO RUN 
         //pgmDrawCircleCPU(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
-    if (opt == OPT_EDGE)
+    if (opt == OPT_EDGE) {
         pgmDrawEdge(pixels, numRows, numCols, edgeWidth, header);
-    
+
+	}
     if (opt == OPT_LINE)
         pgmDrawLine(pixels, numRows, numCols, header, p1y, p1x, p2y, p2x);
                 
