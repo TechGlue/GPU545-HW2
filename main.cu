@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include "pgmProcess.h"
 #include "pgmUtility.h"
-
+#include "timing.h"
 int main(int argc, char *argv[]){
 
+	double now, then, cost;
     ArgOption opt;
 	FILE *fp = NULL, *out = NULL;
 	char ** header = (char**) malloc( sizeof(char *) * rowsInHeader);
@@ -44,6 +45,8 @@ int main(int argc, char *argv[]){
     }
 
     if(fp == NULL || out == NULL || opt == OPT_NULL){
+        if(fp != NULL) fclose(fp);
+        if(out != NULL) fclose(out);
         usage();
         return 1;
     }
@@ -86,6 +89,11 @@ int main(int argc, char *argv[]){
     //cuda memcpy back to host
 	cudaMemcpy(pixels, d_pixels, bytes, cudaMemcpyDeviceToHost);
 	cudaMemcpy(header, d_header, hbytes, cudaMemcpyDeviceToHost);
+
+    //timing 
+    now = currentTime();
+	cost = now - then;	
+    printf("Code execution time: %lf\n", cost);
 
     //once we've done our echanges we are going to pass our one d array and print it out as a 2D-array 
     pgmWrite(header, pixels, numRows, numCols, out );
