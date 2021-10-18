@@ -14,7 +14,7 @@ __device__ float distance( int p1[], int p2[] )
 	return 0.0;
 }
 
-__device__ void pgmDrawEdge( int *pixels, int numRows, int numCols, int edgeWidth, char **header ) {
+__global__ void cudaDrawEdge( int *pixels, int numRows, int numCols, int edgeWidth, char **header ) {
 
         int row = blockIdx.y*blockDim.y+threadIdx.y;
         int col = blockIdx.x*blockDim.x+threadIdx.x;
@@ -27,12 +27,12 @@ __device__ void pgmDrawEdge( int *pixels, int numRows, int numCols, int edgeWidt
 			pixels[row*numRows + col] = 0;
         }
 }//end CUDA EDGE
-__device__ void pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow,
+__global__ void cudaDrawCircle( int *pixels, int numRows, int numCols, int centerRow,
                   int centerCol, int radius, char **header ) {
 
 
 }//end CUDACIRCLE
-__device__ void pgmDrawLine( int *pixels, int numRows, int numCols, char **header, 
+__global__ void cudaDrawLine( int *pixels, int numRows, int numCols, char **header, 
 int p1row, int p1col, int p2row, int p2col) {
 
 
