@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -9,8 +8,6 @@
 // Implement or define each function prototypes listed in pgmUtility.h file.
 // NOTE: Please follow the instructions stated in the write-up regarding the interface of the functions.
 // NOTE: You might have to change the name of this file into pgmUtility.cu if needed.
-
-
 
 /**
  *  Function Name:
@@ -95,7 +92,6 @@ int pgmDrawCircleCPU( int *pixels, int numRows, int numCols, int centerRow, int 
     }
 
     //The equation for a circle is  ( x - h )^2 + ( y - k )^2 = r^2
-
     int i, j;
     int setToZero = 0;
 
@@ -152,7 +148,6 @@ int pgmDrawEdge( int *pixels, int numRows, int numCols, int edgeWidth, char **he
 
     return 0;
 }
-
 
 /**
  *  Function Name:
