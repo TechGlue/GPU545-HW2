@@ -54,7 +54,6 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
     return pixels;
 }
 
-
 /**
  *  Function Name:
  *      pgmDrawCircle()
@@ -73,14 +72,46 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
  *                  have to change maximum intensity value in the header accordingly.
  *  @return         return 1 if max intensity is changed, otherwise return 0;
  */
-int pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header ){
-
-	printf("circlin");
+int pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header )
+{
     return 0;
 }
 
-/**
- *  Function Name:
+//question: how does the max intensity even get changes during the drawing??
+//not required to change the max intensity
+
+//This is a sequential solution move somewhere else if needed. Currently not being called by main.
+int pgmDrawCircleCPU( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header )
+{
+    if(pixels == NULL)
+    {
+        printf("The array is empty. Exiting program...");
+        exit(EXIT_FAILURE);
+    }
+    if(header == NULL)
+    {
+        perror("The header is empty. Can't read in dimensions exiting program...");
+        exit(EXIT_FAILURE);
+    }
+
+    //The equation for a circle is  ( x - h )^2 + ( y - k )^2 = r^2
+
+    int i, j;
+    int setToZero = 0;
+
+    for(i = 0; i < numRows; i++)
+    {
+        for(j = 0; j < numCols; j++)
+        {
+            if((pow(i - centerRow, 2)) + (pow(j - centerCol,2)) <= pow(radius,2)){
+                pixels[(i*numCols)+j] = setToZero;
+            }
+        }
+    }
+    return 0;
+}
+
+/**  Function Name:
  *      pgmDrawEdge()
  *      pgmDrawEdge() draws a black edge frame around the image by setting relavant pixels to Zero.
  *                    In this function, you have to invoke a CUDA kernel to perform all image proces> *
@@ -96,7 +127,37 @@ int pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow, int cen
  *  @return         return 1 if max intensity is changed by the drawing, otherwise return 0;
  */
 int pgmDrawEdge( int *pixels, int numRows, int numCols, int edgeWidth, char **header ){
-	printf("edgin");
+
+	int j, k, i;
+	//j is the row index, k is the column index
+	for(j = 0; j < numRows; j++) {
+		for(k = 0; k < numCols; k++) {
+		/* for this solution we want to check if the row index 
+		is less than the edgeWidth or greater than the rowSize - edgeWidth
+		if true we change that pixel location to zero because it fits in our edge.
+
+		if not we check to see if the column index is less than edgeWidth or if the column index is 
+		greater than numCols - edgeWidth if true we change the pixel to zero
+		*/
+		if(j < edgeWidth || j >= numRows-edgeWidth)
+			pixels[j*numRows + k] = 0;
+		else if(k < edgeWidth || k >= numCols-edgeWidth)
+			pixels[j*numRows + k] = 0;
+			//print statement to check pixels in arr
+			//printf("%d ", pixels[j*numRows + k]);
+
+
+		}
+		//print statement to create a new line after every row to check pixels easier
+		//printf("\n");
+
+	}
+
+
+
+
+
+
     return 0;
 }
 
