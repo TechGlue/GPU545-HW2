@@ -1,3 +1,4 @@
+#include <stdio.h>
 /**
  *  Function Name:
  *      distance()
@@ -11,17 +12,17 @@ __device__ float distance( int p1[], int p2[] ){
 	return 0.0;
 }
 
-__device__ void drawEdgeCUDA( int *pixels, int numRows, int numCols, int edgeWidth, char **header ){
+__global__ void drawEdgeCUDA( int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int edgeWidth ){
         int row = blockIdx.y*blockDim.y+threadIdx.y;
         int col = blockIdx.x*blockDim.x+threadIdx.x;
+        printf("in cuda lol");
+        // if( row < numRows && col < numCols) {
 
-        if( row < numRows && col < numCols) {
-
-                if(row < edgeWidth || row >= numRows-edgeWidth)
-			pixels[row*numRows + col] = 0;
-		else if(col < edgeWidth || col >= numCols-edgeWidth)
-			pixels[row*numRows + col] = 0;
-        }
+        //         if(row < edgeWidth || row >= numRows-edgeWidth)
+	// 		pixels[row*numRows + col] = 0;
+	// 	else if(col < edgeWidth || col >= numCols-edgeWidth)
+	// 		pixels[row*numRows + col] = 0;
+        // }
 }//end CUDA EDGE
 
 __device__ void drawCircleCUDA( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header ){
