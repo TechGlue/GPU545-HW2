@@ -10,6 +10,6 @@
  */
 __device__ float distance( int p1[], int p2[] );
 __device__ void drawEdgeCUDA(int *pixels, int numRows, int numCols, int edgeWidth, char **header);
-__device__ void pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow,
+__device__ void drawCircleCUDA( int *pixels, int numRows, int numCols, int centerRow,
                   int centerCol, int radius, char **header );
-__device__ void pgmDrawLine( int *pixels, int numRows, int numCols, char **header, int p1row, int p1col, int p2row, int p2col );
+__device__ void drawLineCUDA( int *pixels, int numRows, int numCols, char **header, int p1row, int p1col, int p2row, int p2col );
