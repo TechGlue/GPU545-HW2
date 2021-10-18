@@ -174,7 +174,36 @@ int pgmDrawEdge( int *pixels, int numRows, int numCols, int edgeWidth, char **he
  *  @return         return 1 if max intensity is changed by the drawing, otherwise return 0;
  */
 int pgmDrawLine( int *pixels, int numRows, int numCols, char **header, int p1row, int p1col, int p2row, int p2col ){
-
+    int diff_x = p2col - p1col;
+	int diff_y = p2row - p1row;
+	
+	//Slope is calculated by (p2col - p1col)/(p2row - p1row)
+	
+	float slope = (float) diff_y / (float) diff_x; //Slope is used to check for percisely when does the value reach a new interval but still preserving it's normal rise/run values.
+	float yCur = (float) p1row;
+	
+	if(diff_x == 0){ //diff_x means that there is no x increase/decrease.
+		if(p1row < p2row){
+			for(;p1row < p2row; p1row++)
+				pixels[p1row * numCols + p1col] = 0;
+		}else{
+			for(;p1row > p2row; p2row--)
+				pixels[p2row * numCols + p1col] = 0;
+		}
+	}else{
+		if(p1col < p2col){
+			for(p1col; p1col < p2col; p1col++){ //Column will just increment naturally.
+			pixels[(int) yCur * numCols + p1col] = 0;
+			yCur += slope;
+			}
+		}else{
+			//If p1col is less than p2col, then we will decrease until it reaches p2col.
+			for(p1col; p1col > p2col; p1col--){
+				pixels[(int) yCur * numCols + p1col] = 0;
+				yCur += slope;
+			}
+		}
+	}
 	printf("drawling");
     return 0;
 }
