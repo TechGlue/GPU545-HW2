@@ -182,7 +182,7 @@ int pgmDrawLine( int *pixels, int numRows, int numCols, char **header, int p1row
 	float slope = (float) diff_y / (float) diff_x; //Slope is used to check for percisely when does the value reach a new interval but still preserving it's normal rise/run values.
 	float yCur = (float) p1row;
 	
-	if(diff_x == 0){ //diff_x means that there is no y increase/decrease.
+	if(diff_x == 0){ //diff_x means that there is no x increase/decrease.
 		if(p1row < p2row){
 			for(;p1row < p2row; p1row++)
 				pixels[p1row * numCols + p1col] = 0;
