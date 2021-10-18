@@ -145,18 +145,10 @@ int pgmDrawEdge( int *pixels, int numRows, int numCols, int edgeWidth, char **he
 			pixels[j*numRows + k] = 0;
 			//print statement to check pixels in arr
 			//printf("%d ", pixels[j*numRows + k]);
-
-
 		}
 		//print statement to create a new line after every row to check pixels easier
 		//printf("\n");
-
 	}
-
-
-
-
-
 
     return 0;
 }
