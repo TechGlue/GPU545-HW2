@@ -54,7 +54,6 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
     return pixels;
 }
 
-
 /**
  *  Function Name:
  *      pgmDrawCircle()
@@ -73,14 +72,46 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
  *                  have to change maximum intensity value in the header accordingly.
  *  @return         return 1 if max intensity is changed, otherwise return 0;
  */
-int pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header ){
-
-	printf("circlin");
+int pgmDrawCircle( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header )
+{
     return 0;
 }
 
-/**
- *  Function Name:
+//question: how does the max intensity even get changes during the drawing??
+//not required to change the max intensity
+
+//This is a sequential solution move somewhere else if needed. Currently not being called by main.
+int pgmDrawCircleCPU( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header )
+{
+    if(pixels == NULL)
+    {
+        printf("The array is empty. Exiting program...");
+        exit(EXIT_FAILURE);
+    }
+    if(header == NULL)
+    {
+        perror("The header is empty. Can't read in dimensions exiting program...");
+        exit(EXIT_FAILURE);
+    }
+
+    //The equation for a circle is  ( x - h )^2 + ( y - k )^2 = r^2
+
+    int i, j;
+    int setToZero = 0;
+
+    for(i = 0; i < numRows; i++)
+    {
+        for(j = 0; j < numCols; j++)
+        {
+            if((pow(i - centerRow, 2)) + (pow(j - centerCol,2)) <= pow(radius,2)){
+                pixels[(i*numCols)+j] = setToZero;
+            }
+        }
+    }
+    return 0;
+}
+
+/**  Function Name:
  *      pgmDrawEdge()
  *      pgmDrawEdge() draws a black edge frame around the image by setting relavant pixels to Zero.
  *                    In this function, you have to invoke a CUDA kernel to perform all image proces> *
