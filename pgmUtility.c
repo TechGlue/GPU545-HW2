@@ -331,7 +331,6 @@ void parseArgsLine(char *argv[], int *p1y, int *p1x, int *p2y, int *p2x, char or
     *p2y = atoi(argv[4]);
     *p2x = atoi(argv[5]);
 
-
     strcpy(originalImageName, argv[6]);
     strcpy(newImageFileName, argv[7]);
 	printf("%d - %d - %d - %d - %s - %s\n", *p1y, *p1x, *p2y, *p2x, originalImageName, newImageFileName);

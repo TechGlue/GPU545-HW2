@@ -89,19 +89,20 @@ int main(int argc, char *argv[]){
     if (opt == OPT_CIRCLE)
         //pgmDrawCircle(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
         //UNCOMMENT THE LINE BELOW AND COMMENT THE LINE ABOVE TO RUN 
-        pgmDrawCircleCPU(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
+        //pgmDrawCircleCPU(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
+        //drawCircleCUDA<<<gridSize, blockSize>>>(d_pixels, d_header, o_pixels, numRows, numCols, centerRow, centerCol, radius);
     if (opt == OPT_EDGE) {
         //declare device memories needed for edge
         //pgmDrawEdge(pixels, numRows, numCols, edgeWidth, header);
-        //drawEdgeCUDA<<<gridSize, blockSize>>>(d_pixels, numRows, numCols, edgeWidth, d_header); 
-        //input pixels,inputheader, output pixels, numRows, numCols, edgeWidth 
+        //drawEdgeCUDA<<<gridSize, blockSize>>>(d_pixels, numRows, numCols, edgeWidth, d_header);   
+        //input pixels,inputheader, output pixels, numRows, numC 
         drawEdgeCUDA<<<gridSize, blockSize>>>(d_pixels,d_header,o_pixels,numRows,numCols,edgeWidth);
 	}
     if (opt == OPT_LINE)
         pgmDrawLine(pixels, numRows, numCols, header, p1y, p1x, p2y, p2x);
     
     //cuda memcpy back to host
-	cudaMemcpy(pixels, d_pixels, bytes, cudaMemcpyDeviceToHost);
+	cudaMemcpy(pixels, o_pixels, bytes, cudaMemcpyDeviceToHost);
 	cudaMemcpy(header, d_header, hbytes, cudaMemcpyDeviceToHost);
 
     //timing 
