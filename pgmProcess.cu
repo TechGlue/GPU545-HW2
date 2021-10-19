@@ -1,3 +1,4 @@
+#include <stdio.h>
 /**
  *  Function Name:
  *      distance()
@@ -11,25 +12,26 @@ __device__ float distance( int p1[], int p2[] ){
 	return 0.0;
 }
 
-__device__ void drawEdgeCUDA( int *pixels, int numRows, int numCols, int edgeWidth, char **header ){
-        int row = blockIdx.y*blockDim.y+threadIdx.y;
-        int col = blockIdx.x*blockDim.x+threadIdx.x;
+//idk why put this will only run with a global
+//variables with d_ are input pointers and the _o is going to be our output array.
+//this format will connect our main with the functions
+__global__ void drawEdgeCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int edgeWidth ){
+        int col = blockIdx.x*blockDim.x + threadIdx.x;
+        int row = blockIdx.y*blockDim.y + threadIdx.y;
 
-        if( row < numRows && col < numCols) {
-
-                if(row < edgeWidth || row >= numRows-edgeWidth)
-			pixels[row*numRows + col] = 0;
-		else if(col < edgeWidth || col >= numCols-edgeWidth)
-			pixels[row*numRows + col] = 0;
-        }
+        
 }//end CUDA EDGE
 
-__device__ void drawCircleCUDA( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header ){
 
+//Both line and circle. Look at your headers and inputs before working.
+__global__ void drawCircleCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int centerRow, int centerCol, int radius){
+        int col  = blockIdx.x*blockDim.x + threadIdx.x;
+        int row   = blockIdx.y*blockDim.y + threadIdx.y;
 
 }//end CUDACIRCLE
 
-__device__ void drawLineCUDA( int *pixels, int numRows, int numCols, char **header, int p1row, int p1col, int p2row, int p2col){
-
+__global__ void drawLineCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int p1row, int p1col, int p2row, int p2col){
+        int Col  = blockIdx.x*blockDim.x + threadIdx.x;
+        int row   = blockIdx.y*blockDim.y + threadIdx.y;
 
 }//end CUDA LINE

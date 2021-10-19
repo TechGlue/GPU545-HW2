@@ -1,4 +1,3 @@
-
 /**
  *  Function Name:
  *      distance()
@@ -9,7 +8,6 @@
  *  @return         return distance between p1 and p2
  */
 __device__ float distance( int p1[], int p2[] );
-__device__ void drawEdgeCUDA(int *pixels, int numRows, int numCols, int edgeWidth, char **header);
-__device__ void drawCircleCUDA( int *pixels, int numRows, int numCols, int centerRow,
-                  int centerCol, int radius, char **header );
-__device__ void drawLineCUDA( int *pixels, int numRows, int numCols, char **header, int p1row, int p1col, int p2row, int p2col );
+__global__ void drawEdgeCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int edgeWidth);
+__global__ void drawCircleCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int centerRow, int centerCol, int radius);
+__global__ void drawLineCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int p1row, int p1col, int p2row, int p2col);
