@@ -62,7 +62,6 @@ int main(int argc, char *argv[]){
     //output 1D array
     int *o_pixels;
 
-
     //number of bytes for the two variables from above. 
     size_t bytes = (sizeof(int) * (numRows * numCols));
     size_t hbytes = (sizeof(char) * maxSizeHeadRow);
@@ -74,7 +73,8 @@ int main(int argc, char *argv[]){
     //copying host to the device. Pixels being copied to d_pixels. Same for host.
 	cudaMemcpy(d_pixels, pixels, bytes, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_header, header, hbytes, cudaMemcpyHostToDevice);
-	
+	cudaMemcpy(o_pixels, pixels, bytes, cudaMemcpyHostToDevice);
+
     //not sure what to do for grid size or n so we're gonna do 100000 like vecAdd example
 	int n1 = 100000;
     int blockSize = 1024; 
@@ -82,15 +82,15 @@ int main(int argc, char *argv[]){
 
     //number of threads in a block
 	gridSize = (int)ceil((float)n1/blockSize);
+    //experimental grid size.
+    //gridSize = (int)ceil((float)numRows/blockSize);
 
     //END OF SETUP
     
     //The actuall logic methods that will help create the different shapes on the images.  
-    if (opt == OPT_CIRCLE)
-        //pgmDrawCircle(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
-        //UNCOMMENT THE LINE BELOW AND COMMENT THE LINE ABOVE TO RUN 
-        //pgmDrawCircleCPU(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
-        //drawCircleCUDA<<<gridSize, blockSize>>>(d_pixels, d_header, o_pixels, numRows, numCols, centerRow, centerCol, radius);
+    if (opt == OPT_CIRCLE){
+
+    }
     if (opt == OPT_EDGE) {
         //declare device memories needed for edge
         //pgmDrawEdge(pixels, numRows, numCols, edgeWidth, header);
@@ -98,8 +98,9 @@ int main(int argc, char *argv[]){
         //input pixels,inputheader, output pixels, numRows, numC 
         drawEdgeCUDA<<<gridSize, blockSize>>>(d_pixels,d_header,o_pixels,numRows,numCols,edgeWidth);
 	}
-    if (opt == OPT_LINE)
+    if (opt == OPT_LINE){
         pgmDrawLine(pixels, numRows, numCols, header, p1y, p1x, p2y, p2x);
+    }
     
     //cuda memcpy back to host
 	cudaMemcpy(pixels, o_pixels, bytes, cudaMemcpyDeviceToHost);
@@ -115,10 +116,11 @@ int main(int argc, char *argv[]){
 
     //free cuda memory
 	cudaFree(d_pixels);
+    cudaFree(o_pixels);
 	cudaFree(d_header);
 
     i = 0;
-    for(;i < rowsInHeader; i++)
+    for(i < rowsInHeader; i++)
         free(header[i]);
     free(header);
     if(out != NULL)

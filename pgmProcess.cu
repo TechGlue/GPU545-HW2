@@ -16,7 +16,7 @@ __device__ float distance( int p1[], int p2[] ){
 //idk why put this will only run with a global
 //variables with d_ are input pointers and the _o is going to be our output array.
 //this format will connect our main with the functions
-__global__ void drawEdgeCUDA( int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int edgeWidth ){
+__global__ void drawEdgeCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int edgeWidth ){
         
         int col = blockIdx.x*blockDim.x + threadIdx.x;
         int row = blockIdx.y*blockDim.y + threadIdx.y;
@@ -25,14 +25,16 @@ __global__ void drawEdgeCUDA( int *d_pixels, char **d_header, int *o_pixels, int
         
 }//end CUDA EDGE
 
+
+//Both line and circle. Look at your headers and inputs before working.
 __global__ void drawCircleCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int centerRow, int centerCol, int radius){
-        int Col  = blockIdx.x*blockDim.x + threadIdx.x;
-        int Row   = blockIdx.y*blockDim.y + threadIdx.y;
+        int col  = blockIdx.x*blockDim.x + threadIdx.x;
+        int row   = blockIdx.y*blockDim.y + threadIdx.y;
 
 }//end CUDACIRCLE
 
 __global__ void drawLineCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int p1row, int p1col, int p2row, int p2col){
         int Col  = blockIdx.x*blockDim.x + threadIdx.x;
-        int Row   = blockIdx.y*blockDim.y + threadIdx.y;
+        int row   = blockIdx.y*blockDim.y + threadIdx.y;
 
 }//end CUDA LINE
