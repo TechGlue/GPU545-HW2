@@ -54,56 +54,40 @@ int main(int argc, char *argv[]){
     pixels = pgmRead(header, &numRows, &numCols, fp);
 
     //GPU METHOD SET_UP
-    
-    //input data 1d array and 2d array 
+    //declare device memory for pixels and header
     int * d_pixels;
     char ** d_header;
-
-    //output 1D array
-    int *o_pixels;
-
-    //number of bytes for the two variables from above. 
     size_t bytes = (sizeof(int) * (numRows * numCols));
-    size_t hbytes = (sizeof(char) * maxSizeHeadRow);
-
-    cudaMalloc(&d_header, hbytes);
     cudaMalloc(&d_pixels, bytes);
-    cudaMalloc(&o_pixels, bytes);
 
-    //copying host to the device. Pixels being copied to d_pixels. Same for host.
+    //header bytes
+    size_t hbytes = (sizeof(char) * maxSizeHeadRow);
+    cudaMalloc(&d_header, hbytes);
+
+
+	//cudaMemCopys for pixels/headers
 	cudaMemcpy(d_pixels, pixels, bytes, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_header, header, hbytes, cudaMemcpyHostToDevice);
-	cudaMemcpy(o_pixels, pixels, bytes, cudaMemcpyHostToDevice);
-
-    //not sure what to do for grid size or n so we're gonna do 100000 like vecAdd example
-	int n1 = 100000;
-    int blockSize = 1024; 
-    int gridSize;
-
-    //number of threads in a block
+	//not sure what to do for grid size or n so we're gonna do 100000 like vecAdd example
+	int n1 = 100000, blockSize = 1024, gridSize;
 	gridSize = (int)ceil((float)n1/blockSize);
-    //experimental grid size.
-    //gridSize = (int)ceil((float)numRows/blockSize);
-
     //END OF SETUP
     
     //The actuall logic methods that will help create the different shapes on the images.  
-    if (opt == OPT_CIRCLE){
-
-    }
+    if (opt == OPT_CIRCLE)
+        //pgmDrawCircle(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
+        //UNCOMMENT THE LINE BELOW AND COMMENT THE LINE ABOVE TO RUN 
+        pgmDrawCircleCPU(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header );
     if (opt == OPT_EDGE) {
         //declare device memories needed for edge
-        //pgmDrawEdge(pixels, numRows, numCols, edgeWidth, header);
-        //drawEdgeCUDA<<<gridSize, blockSize>>>(d_pixels, numRows, numCols, edgeWidth, d_header);   
-        //input pixels,inputheader, output pixels, numRows, numC 
-        drawEdgeCUDA<<<gridSize, blockSize>>>(d_pixels,d_header,o_pixels,numRows,numCols,edgeWidth);
+        pgmDrawEdge(pixels, numRows, numCols, edgeWidth, header);
+        //cudaDrawEdge<<<gridSize, blockSize>>>(d_pixels, numRows, numCols, edgeWidth, d_header);        
 	}
-    if (opt == OPT_LINE){
+    if (opt == OPT_LINE)
         pgmDrawLine(pixels, numRows, numCols, header, p1y, p1x, p2y, p2x);
-    }
     
     //cuda memcpy back to host
-	cudaMemcpy(pixels, o_pixels, bytes, cudaMemcpyDeviceToHost);
+	cudaMemcpy(pixels, d_pixels, bytes, cudaMemcpyDeviceToHost);
 	cudaMemcpy(header, d_header, hbytes, cudaMemcpyDeviceToHost);
 
     //timing 
@@ -116,11 +100,10 @@ int main(int argc, char *argv[]){
 
     //free cuda memory
 	cudaFree(d_pixels);
-    cudaFree(o_pixels);
 	cudaFree(d_header);
 
     i = 0;
-    for(i < rowsInHeader; i++)
+    for(;i < rowsInHeader; i++)
         free(header[i]);
     free(header);
     if(out != NULL)
