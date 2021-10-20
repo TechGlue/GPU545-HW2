@@ -39,13 +39,15 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
         }
 	//Get numRows and numCols
 	char * numRowColData = header[2];
-	sscanf(numRowColData,"%d",numRows); //Since the row and cols are spaced out, sscanf will check for the first number.
-	sscanf(numRowColData,"%d",numCols); //Finds the next.
+	sscanf(numRowColData,"%d %d", numRows, numCols); //Since the row and cols are spaced out, sscanf will check for the first number.
+	//sscanf(numRowColData,"%d",numCols); //Finds the next.
 
 	//initialize the pixels to be represented in a 1D ARRAY 
-	int * pixels = (int * ) malloc(sizeof(int) * (*numRows * *numCols));
+    size_t num_bytes = sizeof(int) * ((*numRows) * (*numCols));
+
+	int * pixels = (int * ) malloc(num_bytes);
 	//for the rest of the file store elements into pixel array
-	for(i = 0; i < *numRows * *numCols; i++){
+	for(i = 0; i < (*numRows) * (*numCols); i++){
 		fscanf(in,"%d",&pixels[i]); //fscanf will stop after reading an iteger.
 	}
     return pixels;
@@ -123,11 +125,13 @@ int pgmDrawCircleCPU( int *pixels, int numRows, int numCols, int centerRow, int 
  *  @return         return 1 if max intensity is changed by the drawing, otherwise return 0;
  */
 int pgmDrawEdge( int *pixels, int numRows, int numCols, int edgeWidth, char **header ){
-
+	//Ballons.ascii.pgm does not work.
 	int j, k, i;
 	//j is the row index, k is the column index
 	for(j = 0; j < numRows; j++) {
+		
 		for(k = 0; k < numCols; k++) {
+		//printf("In Column %d\n",k);
 		/* for this solution we want to check if the row index 
 		is less than the edgeWidth or greater than the rowSize - edgeWidth
 		if true we change that pixel location to zero because it fits in our edge.
@@ -136,16 +140,16 @@ int pgmDrawEdge( int *pixels, int numRows, int numCols, int edgeWidth, char **he
 		greater than numCols - edgeWidth if true we change the pixel to zero
 		*/
 		if(j < edgeWidth || j >= numRows-edgeWidth)
-			pixels[j*numRows + k] = 0;
+			pixels[j*numCols + k] = 0;
 		else if(k < edgeWidth || k >= numCols-edgeWidth)
-			pixels[j*numRows + k] = 0;
+			pixels[j*numCols + k] = 0;
 			//print statement to check pixels in arr
 			//printf("%d ", pixels[j*numRows + k]);
 		}
 		//print statement to create a new line after every row to check pixels easier
-		//printf("\n");
+		
 	}
-
+    printf("Exited the Draw Edge!!\n");
     return 0;
 }
 
@@ -237,10 +241,10 @@ int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *
 
     //TODO:**relook at the name of the output file** "output.ascii.pgm" is not CORRECT
     //opening file out and preparing for write. Wb input means we are creating a file for writing. 
-    out = fopen("output.ascii.pgm", "wb");
+    //out = fopen("output.ascii.pgm", "wb");
 
     //writing pgm file type
-    fprintf(out, header[0]);
+    fprintf(out, "%s", *header);
 
     //writing out comment for the image name
     fprintf(out, "%s", header[1]); 
@@ -261,9 +265,10 @@ int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *
         }
         fprintf(out, "\n");
     }
+    //fflush(out);
 
     //closing output file
-    fclose(out);
+    //fclose(out);
     return 0;
 }
 

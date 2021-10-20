@@ -4,7 +4,8 @@
 #include "timing.h"
 int main(int argc, char *argv[]){
 
-	double now, then, cost;
+	double cpuNow, cpuThen, cpuCost;
+	double gpuNow, gpuThen, gpuCost;
     ArgOption opt;
 	FILE *fp = NULL, *out = NULL;
 	char ** header = (char**) malloc( sizeof(char *) * rowsInHeader);
@@ -18,8 +19,8 @@ int main(int argc, char *argv[]){
 
     int numRows, numCols;
 
-    int p1y = 0;
-    int p1x = 0;
+    int p1y = 0; // row
+    int p1x = 0; // col
     int p2y = 0;
     int p2x = 0;
 
@@ -45,8 +46,17 @@ int main(int argc, char *argv[]){
     }
 
     if(fp == NULL || out == NULL || opt == OPT_NULL){
-        if(fp != NULL) fclose(fp);
-        if(out != NULL) fclose(out);
+        if(fp != NULL){
+            printf("Input file pointer is null, closing.");
+            fclose(fp);
+            return 1;
+        } 
+        if(out != NULL){
+            printf("Output file pointer is null, closing.");
+            fclose(out);
+            return 1;
+        } 
+        printf("No appropriate option specified in arguments.");
         usage();
         return 1;
     }
@@ -61,12 +71,11 @@ int main(int argc, char *argv[]){
 
     //output 1D array
     int *o_pixels;
-
-
     //number of bytes for the two variables from above. 
     size_t bytes = (sizeof(int) * (numRows * numCols));
     size_t hbytes = (sizeof(char) * maxSizeHeadRow);
 
+    
     cudaMalloc(&d_header, hbytes);
     cudaMalloc(&d_pixels, bytes);
     cudaMalloc(&o_pixels, bytes);
@@ -76,40 +85,63 @@ int main(int argc, char *argv[]){
 	cudaMemcpy(d_header, header, hbytes, cudaMemcpyHostToDevice);
     cudaMemcpy(o_pixels, pixels, bytes, cudaMemcpyHostToDevice);
 	
-    //not sure what to do for grid size or n so we're gonna do 100000 like vecAdd example
-	int n1 = 100000; 
-    int blockSize = 1024; 
-    int gridSize;
+    int threadsPerBlock = 32; 
 
-    //number of threads in a block
-	gridSize = (int)ceil((float)n1/blockSize);
-    //experimental
-    // gridSize = (int)ceil((float) numRows/blockSize);
-    //END OF SETUP
+    int gridDimX = ceil(numRows / (double) threadsPerBlock);
+    int gridDimY = ceil(numCols);
+    printf("Launching with grid of dimensions (%d, %d)\n", gridDimX, gridDimY);
+    dim3 gridSize2D(gridDimX, gridDimY);
+    dim3 blockSize2D(threadsPerBlock);
+
     
     //The actuall logic methods that will help create the different shapes on the images.  
     if (opt == OPT_CIRCLE){
-
+    	cpuThen = currentTime();
+    	pgmDrawCircleCPU(pixels, numRows, numCols, circleCenterRow, circleCenterCol, radius, header);
+    	cpuNow = currentTime();
+    	gpuThen = currentTime();
+        drawCircleCUDA<<<gridSize2D, blockSize2D>>>(d_pixels,d_header,o_pixels,numRows, numCols, circleCenterRow, circleCenterCol, radius);
     }
     if (opt == OPT_EDGE) {
-        //declare device memories needed for edge
-        //pgmDrawEdge(pixels, numRows, numCols, edgeWidth, header);
-        //drawEdgeCUDA<<<gridSize, blockSize>>>(d_pixels, numRows, numCols, edgeWidth, d_header);   
-        //input pixels,inputheader, output pixels, numRows, numC 
-        drawEdgeCUDA<<<gridSize, blockSize>>>(d_pixels,d_header,o_pixels,numRows,numCols,edgeWidth);
-	}
+    	cpuThen = currentTime();
+    	//printf("Row: %d | Col: %d | edgeWidth: %d\n",numRows,numCols,edgeWidth);
+    	pgmDrawEdge(pixels, numRows, numCols, edgeWidth, header);
+    	cpuNow = currentTime();
+    
+    	//Start GPU
+    	gpuThen = currentTime();
+        drawEdgeCUDA<<<gridSize2D, blockSize2D>>>(d_pixels,d_header,o_pixels,numRows,numCols,edgeWidth);
+
+    }
     if (opt == OPT_LINE){
-        pgmDrawLine(pixels, numRows, numCols, header, p1y, p1x, p2y, p2x);
+    	//Start CPU
+    	cpuThen = currentTime();
+    	pgmDrawLine(pixels, numRows, numCols, header, p1y, p1x, p2y, p2x);
+    	cpuNow = currentTime();
+    	
+    	//Start GPU
+    	gpuThen = currentTime();
+	drawLineCUDA<<<gridSize2D, blockSize2D>>>(d_pixels, d_header, o_pixels, numRows, numCols, p1y, p1x, p2y, p2x);
     }
     
+    cudaError_t err = cudaGetLastError();
+
+    if ( err != cudaSuccess )
+    {
+        printf("CUDA Error: %s\n", cudaGetErrorString(err));       
+    }
+
     //cuda memcpy back to host
 	cudaMemcpy(pixels, o_pixels, bytes, cudaMemcpyDeviceToHost);
 	cudaMemcpy(header, d_header, hbytes, cudaMemcpyDeviceToHost);
-
     //timing 
-    now = currentTime();
-	cost = now - then;	
-    printf("Code execution time: %lf\n", cost);
+    gpuNow = currentTime();
+    cpuCost = cpuNow - cpuThen;
+    gpuCost = gpuNow - gpuThen;
+    
+    printf("\nCPU Execution Time: %lf\nGPU Execution Time: %lf\nSpeedup: %lf\nEfficiency:%lf\n ",cpuCost,gpuCost,cpuCost/gpuCost,cpuCost/gpuCost/threadsPerBlock);
+    	
+    //printf("Code execution time: %lf\n", cost);
 
     //once we've done our echanges we are going to pass our one d array and print it out as a 2D-array 
     pgmWrite(header, pixels, numRows, numCols, out );
@@ -120,11 +152,14 @@ int main(int argc, char *argv[]){
     cudaFree(d_header);
 
     i = 0;
-    for(;i < rowsInHeader; i++)
+    for(;i < 4; ++i)
         free(header[i]);
+    //printf("Freeing the actual header...\n");
     free(header);
+    printf("Closing out file...\n");
     if(out != NULL)
         fclose(out);
+    printf("Closing fp file...\n");
     if(fp != NULL)
         fclose(fp);
 
