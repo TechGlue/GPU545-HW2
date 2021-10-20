@@ -39,13 +39,15 @@ int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in){
         }
 	//Get numRows and numCols
 	char * numRowColData = header[2];
-	sscanf(numRowColData,"%d",numRows); //Since the row and cols are spaced out, sscanf will check for the first number.
-	sscanf(numRowColData,"%d",numCols); //Finds the next.
+	sscanf(numRowColData,"%d %d", numRows, numCols); //Since the row and cols are spaced out, sscanf will check for the first number.
+	//sscanf(numRowColData,"%d",numCols); //Finds the next.
 
 	//initialize the pixels to be represented in a 1D ARRAY 
-	int * pixels = (int * ) malloc(sizeof(int) * (*numRows * *numCols));
+    size_t num_bytes = sizeof(int) * ((*numRows) * (*numCols));
+
+	int * pixels = (int * ) malloc(num_bytes);
 	//for the rest of the file store elements into pixel array
-	for(i = 0; i < *numRows * *numCols; i++){
+	for(i = 0; i < (*numRows) * (*numCols); i++){
 		fscanf(in,"%d",&pixels[i]); //fscanf will stop after reading an iteger.
 	}
     return pixels;
@@ -240,7 +242,7 @@ int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *
     out = fopen("output.ascii.pgm", "wb");
 
     //writing pgm file type
-    fprintf(out, header[0]);
+    fprintf(out, "%s", *header);
 
     //writing out comment for the image name
     fprintf(out, "%s", header[1]); 
@@ -261,6 +263,7 @@ int pgmWrite( char **header, const int *pixels, int numRows, int numCols, FILE *
         }
         fprintf(out, "\n");
     }
+    //fflush(out);
 
     //closing output file
     fclose(out);

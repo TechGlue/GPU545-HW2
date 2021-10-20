@@ -35,7 +35,7 @@ enum ArgOption {
  *                  a 1D array that stores a 2D image in a linearized fashion. Otherwise null.
  *
  */
-int * pgmRead( char **header, int *numRows, int *numCols, FILE *in  );
+int * pgmRead(char ** header, int *numRows, int *numCols, FILE *in);
 
 /**
  *  Function Name:
