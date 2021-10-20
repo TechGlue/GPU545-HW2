@@ -23,10 +23,10 @@ __global__ void drawEdgeCUDA(int *d_pixels, char **d_header, int *o_pixels, int 
         int row = blockIdx.x * blockDim.x + threadIdx.x;
         int col = blockIdx.y * blockDim.y + threadIdx.y; 
 
-        if(row < edgeWidth && threadId < numCols * numRows)
-                o_pixels[threadId] = 0;
-        if(col < edgeWidth && col < numCols && threadId < numCols * numRows)
-                o_pixels[threadId] = 0;
+        if(row < edgeWidth || row > numRows - edgeWidth && threadId < numCols * numRows)
+		o_pixels[threadId] = 0;
+	else if(col < edgeWidth || col > numCols - edgeWidth && col < numCols && threadId < numCols * numRows)
+		o_pixels[threadId] = 0;
         
 }//end CUDA EDGE
 
@@ -55,10 +55,11 @@ __global__ void drawLineCUDA(int *d_pixels, char **d_header, int *o_pixels, int 
 
         float slope = (float) (p2row - p1row) / (float) (p2col - p1col);
         float intercept = p1row - ((float) p1col) * slope; 
-
-        if(abs(row - (float) (slope * col + intercept)) <= 1 && col <= max(p1col, p2col) && col >= min(p1col, p2col) && row <= max(p1row, p2row) && row >= min(p1row, p2row))
+	if(isinf(slope)){
+		if(row >= min(p1row,p2row) && row <= max(p1row,p2row) && col == p1col)
+			o_pixels[threadId] = 0;
+	}
+        else if(abs(row - (float) (slope * col + intercept)) <= 1 && col <= max(p1col, p2col) && col >= min(p1col, p2col) && row <= max(p1row, p2row) && row >= min(p1row, p2row))
                 o_pixels[threadId] = 0;
-
-
 
 }//end CUDA LINE
