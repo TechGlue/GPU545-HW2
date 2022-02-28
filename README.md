@@ -1,4 +1,4 @@
-# GPU545 Homework 2 Simple Image Proocessing on CUDA Device
+# GPU545 Homework 2 Simple Image Processing on CUDA Device
 
 This repository is the home to a group assignment for CSCD 545 GPU Computing. In this project we manipulate PGM images (Portable Grap Map). What PGM images are a file that is made up of a header with information on the image (P2 tells us it's an ascii pgm file, name of file, dimensions of the grid, and the maximum intensity of each pixel) and a grid of different brightness intensities. 
 
