@@ -14,4 +14,4 @@ timing.o: timing.c timing.h
 	g++ -c timing.c -o timing.o -I.
 
 clean:
-	rm -r *.o myPaint 
+	rm -r *.o *.txt myPaint 

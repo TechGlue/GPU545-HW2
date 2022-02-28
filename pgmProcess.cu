@@ -8,13 +8,12 @@
  *  @param[in]  p2  coordinates of pixel two, p2[0] is for row number, p2[1] is for column number
  *  @return         return distance between p1 and p2
  */
+
+//Was not needed for the final build. Was able to create a circle following it's mathmatical formula.k
 __device__ float distance( int p1[], int p2[] ){
 	return 0.0;
 }
 
-//idk why put this will only run with a global
-//variables with d_ are input pointers and the _o is going to be our output array.
-//this format will connect our main with the functions
 __global__ void drawEdgeCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int edgeWidth ){
         int blockId = blockIdx.x + blockIdx.y * gridDim.x;
         int threadId = blockId * (blockDim.x * blockDim.y)
@@ -30,8 +29,6 @@ __global__ void drawEdgeCUDA(int *d_pixels, char **d_header, int *o_pixels, int 
         
 }//end CUDA EDGE
 
-
-//Both line and circle. Look at your headers and inputs before working.
 __global__ void drawCircleCUDA(int *d_pixels, char **d_header, int *o_pixels, int numRows, int numCols, int centerRow, int centerCol, int radius){
         int blockId = blockIdx.x + blockIdx.y * gridDim.x;
         int threadId = blockId * (blockDim.x * blockDim.y)
@@ -61,5 +58,4 @@ __global__ void drawLineCUDA(int *d_pixels, char **d_header, int *o_pixels, int 
 	}
         else if(abs(row - (float) (slope * col + intercept)) <= 1 && col <= max(p1col, p2col) && col >= min(p1col, p2col) && row <= max(p1row, p2row) && row >= min(p1row, p2row))
                 o_pixels[threadId] = 0;
-
 }//end CUDA LINE

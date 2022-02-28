@@ -7,9 +7,7 @@
 
 #ifndef cscd439pgm_pgmUtility_h
 #define cscd439pgm_pgmUtility_h
-
 #include <math.h>
-
 #define rowsInHeader 4      // number of rows in image header
 #define maxSizeHeadRow 200  // maximal number characters in one row in the header
 
@@ -157,10 +155,4 @@ void parseArgsLine(char *argv[], int *p1y, int *p1x, int *p2y, int *p2x, char or
 //method used by main to print the usage of our application 
 //when our argument parameters aren't satisfactory
 void usage();
-
-//CPU sequential code headers
-int pgmDrawCircleCPU( int *pixels, int numRows, int numCols, int centerRow, int centerCol, int radius, char **header );
-
-//Misc used by luis for review and building. Leave here till turn in thanks!
-void temp2DHeaderReader(char ** header);
 #endif
