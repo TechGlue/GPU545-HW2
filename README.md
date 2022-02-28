@@ -59,4 +59,4 @@ Clean and compile the project.
 
 ## Demo
 
-Coming soon..
+![Project Demo](./../ContributingGuide/GPUHW2Demo.gif?raw=true)
